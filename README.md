@@ -1,5 +1,7 @@
 # Shelldon
 
+![](./assets/shelldon.jpeg)
+
 Shelldon is a command-line tool written in Rust. It provides a set of utilities for executing shell commands, managing prompts, and interacting with GPT.
 
 Yes, another CLI with GPT features. Shelldon is not intended to be a full GPT client from the terminal; there are a couple of CLIs much better for that and also a lot of applications and even the OpenAI ChatGPT apps. Shelldon is to solve some personal use cases and it is very useful for me; I hope it could be useful for you too. Also, I made it to have fun playing with Rust!
