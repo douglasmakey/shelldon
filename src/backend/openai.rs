@@ -8,9 +8,8 @@ use async_openai::{
     },
     Client,
 };
-use futures::stream::BoxStream;
-//. TODO: Read more about futures and StreamExt
 use async_stream::stream;
+use futures::stream::BoxStream;
 
 pub struct OpenAI {
     client: Client<OpenAIConfig>,
