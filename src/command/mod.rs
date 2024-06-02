@@ -2,6 +2,10 @@ mod ask;
 mod exec;
 mod prompts;
 
+pub use self::ask::*;
+pub use self::exec::*;
+pub use self::prompts::*;
+
 use crate::{
     config::{Config, PromptValue},
     Result,
@@ -14,10 +18,6 @@ use std::{
     collections::HashMap,
     io::{self, Read},
 };
-
-pub use self::ask::*;
-pub use self::exec::*;
-pub use self::prompts::*;
 
 #[derive(Debug, Clone, PartialEq, Eq, Hash)]
 struct KeyValue {

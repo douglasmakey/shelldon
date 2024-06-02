@@ -83,7 +83,7 @@ $ git diff | shelldon "Generate a commit message" --copy
 "Refactor logging system to improve error handling and performance. This change updates the logging library and adjusts the log levels for better clarity."
 ```
 
-You can use the --copy command to copy the output directly to your clipboard.
+You can use the `--copy` command to copy the output directly to your clipboard.
 
 ### Handling Prompts
 
@@ -138,6 +138,14 @@ You can also modify the values for the template:
 shelldon ask --prompt translator "Chicos voy a llegar 5 minutos tarde a la reunion" --set to=english --set from=spanish
 Guys, I'm going to be 5 minutes late to the meeting.
 ```
+
+## TODO
+
+- [ ] Implement the best way to print the output nicely.
+- [ ] Improve error handling.
+- [ ] Add default prompts.
+- [ ] Implement OpenAI functions?
+- [ ] Implement Ollama? Maybe in the future. Do you need it?
 
 ## Contributing
 

@@ -1,11 +1,10 @@
 use crate::{Error, Result};
+use dialoguer::console::style;
 use std::{
     env,
     io::Write,
     process::{Command, Stdio},
 };
-
-use dialoguer::console::style;
 
 pub fn get_current_shell() -> String {
     // Detect the current platform

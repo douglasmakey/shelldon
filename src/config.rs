@@ -1,11 +1,10 @@
 use crate::Result;
+use regex::Regex;
 use serde::{Deserialize, Serialize};
 use std::{
     fs,
     path::{Path, PathBuf},
 };
-
-use regex::Regex;
 
 const SHELLDON: &str = "shelldon";
 
