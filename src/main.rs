@@ -5,6 +5,7 @@ mod error;
 mod processor;
 mod system;
 
+use dialoguer::console::style;
 pub use error::{Error, Result};
 
 use clap::{Parser, Subcommand};
@@ -40,7 +41,7 @@ async fn main() {
     };
 
     if let Err(e) = result {
-        eprintln!("Error: {}", e);
+        eprintln!("{} {}", style("✖").red(), e);
         std::process::exit(1);
     }
 }

@@ -50,12 +50,9 @@ pub async fn handle_prompts(config: Config, args: PromptsArgs) -> Result<()> {
         Command::Edit(args) => {
             let prompt = match config.load_prompt(&args.name) {
                 Some(prompt) => prompt,
-                None => {
-                    println!("{} Prompt not found", style("✖").red());
-                    Err(Error::PromptNotFound {
-                        name: args.name.clone(),
-                    })?
-                }
+                None => Err(Error::PromptNotFound {
+                    name: args.name.clone(),
+                })?,
             };
 
             if let Some(new_content) = Editor::new().edit(&prompt.content).unwrap() {
@@ -87,7 +84,6 @@ pub async fn handle_prompts(config: Config, args: PromptsArgs) -> Result<()> {
         Command::Delete(args) => {
             let name = args.name;
             if config.load_prompt(&name).is_none() {
-                println!("{} Prompt not found", style("✖").red());
                 Err(Error::PromptNotFound { name: name.clone() })?;
             }
 

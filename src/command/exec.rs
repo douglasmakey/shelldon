@@ -7,7 +7,7 @@ use crate::{
     Result,
 };
 use clap::Parser;
-use dialoguer::{theme::ColorfulTheme, Editor, Input};
+use dialoguer::{console::style, theme::ColorfulTheme, Editor, Input};
 
 const RUN: &str = "r";
 const COPY: &str = "c";
@@ -89,7 +89,11 @@ fn prompt_action_for_cmd(command: &str) -> Result<()> {
             }
             Ok(())
         }
-        COPY => copy_to_clipboard(command),
+        COPY => {
+            copy_to_clipboard(command)?;
+            println!("\n {} Copied to clipboard", style("✔").green());
+            Ok(())
+        }
         ABORT => Ok(()),
         _ => unreachable!(), // This should never happen due to the validation
     }

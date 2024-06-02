@@ -6,6 +6,7 @@ pub use self::ask::*;
 pub use self::exec::*;
 pub use self::prompts::*;
 
+use crate::Error;
 use crate::{
     config::{Config, PromptValue},
     Result,
@@ -49,7 +50,7 @@ fn parse_prompt(
     let prompt = if let Some(prompt) = config.load_prompt(&name) {
         prompt
     } else {
-        return Ok(default_prompt.to_string());
+        Err(Error::PromptNotFound { name })?
     };
 
     // Merge the values from `prompt` and `values` into a single vector of `PromptValue`.

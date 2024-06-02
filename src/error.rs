@@ -4,15 +4,12 @@ pub type Result<T> = std::result::Result<T, Error>;
 
 #[derive(Debug, Display, From)]
 pub enum Error {
-    PromptAlreadyExists {
-        name: String,
-    },
-    PromptNotFound {
-        name: String,
-    },
-    CommandFailed {
-        command: String,
-    },
+    #[display(fmt = "Prompt '{}' already exists", name)]
+    PromptAlreadyExists { name: String },
+    #[display(fmt = "Prompt '{}' not found", name)]
+    PromptNotFound { name: String },
+    #[display(fmt = "Command '{}' failed", command)]
+    CommandFailed { command: String },
     #[display(fmt = "API key not set")]
     APIKeyNotSet,
 

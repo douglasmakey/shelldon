@@ -7,6 +7,7 @@ use crate::{
     system, Result,
 };
 use clap::Parser;
+use dialoguer::console::style;
 use futures::StreamExt;
 use std::io::{stdout, Write};
 
@@ -19,7 +20,6 @@ pub struct AskArgs {
 pub async fn handle_ask(config: Config, args: AskArgs) -> Result<()> {
     let processor = CompletionProcessor::new(OpenAI::new()?);
     let input = read_input(&args.common.input)?;
-    println!("Input: {}", input);
     let prompt = parse_prompt(config, args.common.prompt, args.common.set, "")?;
     let mut completion = processor
         .generate_stream(
@@ -42,6 +42,7 @@ pub async fn handle_ask(config: Config, args: AskArgs) -> Result<()> {
 
     if args.common.copy {
         system::copy_to_clipboard(whole_buf.as_str())?;
+        println!("\n {} Copied to clipboard", style("✔").green());
     }
 
     Ok(())

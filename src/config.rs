@@ -69,7 +69,6 @@ impl Config {
     pub fn load_prompt(&self, name: &str) -> Option<Prompt> {
         let mut prompt_dir = self.prompts_dir.join(name);
         prompt_dir.set_extension("json");
-        println!("{:?}", prompt_dir);
         let prompt_json = fs::read_to_string(prompt_dir).ok()?;
         serde_json::from_str(&prompt_json).unwrap()
     }
