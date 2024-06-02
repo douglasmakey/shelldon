@@ -117,22 +117,38 @@ To view all the prompts you have created, use the list command:
 
 ```sh
 $ shelldon prompts list
-╭────────────┬──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────┬───────────╮
-│ Name       ┆ Content                                                                                                                                                                          ┆ Variables │
-╞════════════╪══════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════╪═══════════╡
-│ translator ┆ Let’s think step by step and act as a translator. Translate the following text from {from:english} to {to:spanish}. Make it sound natural to a native speaker of {to} while      ┆ from, to  │
-│            ┆ keeping the original tone. Do only minimal edits without changing the tone. Avoid using fancy words. Reply with only the translated text and nothing else. Do not provide        ┆           │
-│            ┆ explanations.                                                                                                                                                                    ┆           │
-├╌╌╌╌╌╌╌╌╌╌╌╌┼╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┼╌╌╌╌╌╌╌╌╌╌╌┤
-│ note-taker ┆ I am software engineer and I’d like you to look at the following text I wrote and edit it to make it sound more natural to a native English speaker. Do only minimal/minor edits ┆           │
-│            ┆ without changing the tone of the text, which should remain the same. Dont use fancy words and I want you to only reply the correction, the improvements and nothing else, do not ┆           │
-│            ┆ write explanations.                                                                                                                                                              ┆           │
-╰────────────┴──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────┴───────────╯
+
+╭────────────┬─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────┬───────────╮
+│ Name       ┆ Content                                                                                                                                                                                                                                                 ┆ Variables │
+╞════════════╪═════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════╪═══════════╡
+│ script     ┆ Let’s think step by step and act as a {script:bash} code scripts expert. Provide only the {script} script code as output without any descriptions or explanations. Ensure the output is in plain text format without Markdown formatting or symbols. If ┆ script    │
+│            ┆ details are insufficient, provide the most logical solution. You are not allowed to ask for more details. Just print the script directly.                                                                                                               ┆           │
+├╌╌╌╌╌╌╌╌╌╌╌╌┼╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┼╌╌╌╌╌╌╌╌╌╌╌┤
+│ translator ┆ Let’s think step by step and act as a translator. Translate the following text from {from:english} to {to:spanish}. Make it sound natural to a native speaker of {to} while keeping the original tone. Do only minimal edits without changing the tone. ┆ from, to  │
+│            ┆ Avoid using fancy words. Reply with only the translated text and nothing else. Do not provide explanations.                                                                                                                                             ┆           │
+├╌╌╌╌╌╌╌╌╌╌╌╌┼╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┼╌╌╌╌╌╌╌╌╌╌╌┤
+│ note-taker ┆ I am software engineer and I’d like you to look at the following text I wrote and edit it to make it sound more natural to a native English speaker. Do only minimal/minor edits without changing the tone of the text, which should remain the same.   ┆           │
+│            ┆ Dont use fancy words and I want you to only reply the correction, the improvements and nothing else, do not write explanations.                                                                                                                         ┆           │
+╰────────────┴─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────┴───────────╯
 ```
 
 You can use the `{}` notation to add variables to the prompt, and you can override those values using the `--set key=value` option. Additionally, in the prompt template, you can define default values like `{from:spanish}`. This allows for flexible and dynamic prompts that can be customized based on user input.
 
 Then, you can run the ask command with a defined template:
+
+In my daily routine, I often need to generate bash and python scripts or cloud-init files. `shelldon` helps me with this task:
+
+```sh
+shelldon ask --prompt script "Generate a cloud-init script to set up an Ubuntu server with the following steps:
+1. Update Ubuntu.
+2. Install Nginx.
+3. Create a custom HTML file to be served by Nginx.
+4. Ensure Nginx is enabled and started." --set script=cloud-init > cloud-init
+```
+
+As you can see, we can redirect the output directly to a file to create the script.
+
+Or some translations.
 
 ```sh
 alias sat="shelldon ask --prompt translator"
@@ -147,6 +163,8 @@ alias sat="shelldon ask --prompt translator"
 sat "Chicos voy a llegar 5 minutos tarde a la reunion" --set to=english --set from=spanish
 Guys, I'm going to be 5 minutes late to the meeting.
 ```
+
+So the ability to handle dynamic prompts with args and use them makes Shelldon a useful tool for me.
 
 ## TODO
 
