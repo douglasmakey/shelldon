@@ -6,6 +6,9 @@ Shelldon is a command-line tool written in Rust. It provides a set of utilities 
 
 Yes, another CLI with GPT features. Shelldon is not intended to be a full GPT client from the terminal; there are a couple of CLIs much better for that and also a lot of applications and even the OpenAI ChatGPT apps. Shelldon is to solve some personal use cases and it is very useful for me; I hope it could be useful for you too. Also, I made it to have fun playing with Rust!
 
+> [!IMPORTANT]
+> One of the features that other tools were missing for my use case is the ability to use custom prompts for specific tasks that I need. For that reason, I created Shelldon with the ability to manage prompts and use them whenever you want for specific tasks. You can read more about this [here](https://github.com/douglasmakey/shelldon?tab=readme-ov-file#handling-prompts). Also, I plan to extend it with plugins to integrate more complex workflows.
+
 ## Installation
 
 ### Building from Source
@@ -127,23 +130,28 @@ $ shelldon prompts list
 ╰────────────┴──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────┴───────────╯
 ```
 
-You can run the ask command with a defined template:
+You can use the `{}` notation to add variables to the prompt, and you can override those values using the `--set key=value` option. Additionally, in the prompt template, you can define default values like `{from:spanish}`. This allows for flexible and dynamic prompts that can be customized based on user input.
+
+Then, you can run the ask command with a defined template:
 
 ```sh
-shelldon ask --prompt translator "Hey guys, I'm a few minutes late for the meeting, in less than 5 minutes I'll be there."
+alias sat="shelldon ask --prompt translator"
+sat "Hey guys, I'm a few minutes late for the meeting, in less than 5 minutes I'll be there."
 Hola chicos, voy unos minutos tarde para la reunión, en menos de 5 minutos estaré ahí.
 ```
 
 You can also modify the values for the template:
 
 ```sh
-shelldon ask --prompt translator "Chicos voy a llegar 5 minutos tarde a la reunion" --set to=english --set from=spanish
+alias sat="shelldon ask --prompt translator"
+sat "Chicos voy a llegar 5 minutos tarde a la reunion" --set to=english --set from=spanish
 Guys, I'm going to be 5 minutes late to the meeting.
 ```
 
 ## TODO
 
 - [ ] Implement the best way to print the output nicely.
+- [ ] Add tests.
 - [ ] Improve error handling.
 - [ ] Add default prompts.
 - [ ] Implement OpenAI functions?
