@@ -91,7 +91,7 @@ fn prompt_action_for_cmd(command: &str) -> Result<()> {
         }
         COPY => {
             copy_to_clipboard(command)?;
-            println!("\n {} Copied to clipboard", style("✔").green());
+            println!("{} Copied to clipboard", style("✔").green());
             Ok(())
         }
         ABORT => Ok(()),

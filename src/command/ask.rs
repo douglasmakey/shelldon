@@ -42,7 +42,7 @@ pub async fn handle_ask(config: Config, args: AskArgs) -> Result<()> {
 
     if args.common.copy {
         system::copy_to_clipboard(whole_buf.as_str())?;
-        println!("\n {} Copied to clipboard", style("✔").green());
+        println!("{} Copied to clipboard", style("✔").green());
     }
 
     Ok(())
