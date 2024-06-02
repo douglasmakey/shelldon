@@ -2,7 +2,7 @@
 
 ![](./assets/shelldon.jpeg)
 
-Shelldon is a command-line tool written in Rust. It provides a set of utilities for executing shell commands, managing prompts, and interacting with GPT.
+Shelldon is a command-line tool written in Rust. It provides a set of utilities for executing shell commands, managing prompts, and interacting with OpenAI GPT.
 
 Yes, another CLI with GPT features. Shelldon is not intended to be a full GPT client from the terminal; there are a couple of CLIs much better for that and also a lot of applications and even the OpenAI ChatGPT apps. Shelldon is to solve some personal use cases and it is very useful for me; I hope it could be useful for you too. Also, I made it to have fun playing with Rust!
 
@@ -22,6 +22,12 @@ cargo build --release
 ```
 
 ## Usage
+
+To use Shelldon, you’ll need to set your OpenAI token. You can do this by setting an environment variable. Here’s how you can set it in your terminal:
+
+```sh
+export OPENAI_API_KEY="your-openai-api-key"
+```
 
 Shelldon allows you to integrate GPT features into your shell commands easily. Here are some examples to get you started:
 
