@@ -43,7 +43,7 @@ Shelldon allows you to integrate GPT features into your shell commands easily. H
 ### Running Shell Commands
 
 ```sh
-$ shelldon "Show all the graphics ports for the Vagrant machine using Libvirt."
+$ shelldon exec "Show all the graphics ports for the Vagrant machine using Libvirt."
 Command to execute: vagrant ssh -c "virsh list --all | grep vagrant | awk '{print \$1}' | xargs -I {} virsh domdisplay {}"
 ? [R]un, [M]odify, [C]opy, [A]bort › 
 ```
@@ -53,7 +53,7 @@ Command to execute: vagrant ssh -c "virsh list --all | grep vagrant | awk '{prin
 Use Shelldon to analyze Docker logs and identify errors:
 
 ```sh
-$ docker logs nginx | shelldon "check logs, find errors"
+$ docker logs nginx | shelldon ask "check logs, find errors"
 ```
 
 **Troubleshooting Kubernetes**
@@ -71,7 +71,7 @@ Here are some steps you can take to address this issue:
 **Generate configuration files with the help of GPT:**
 
 ```sh
-$ shelldon "Create a basic nginx configuration file"
+$ shelldon ask "Create a basic nginx configuration file"
 Configuration file content:
 server {
     listen 80;
@@ -99,7 +99,7 @@ Command to execute: find /var/log -name "*.log" -type f -mtime +30 -exec rm {} \
 **Get help with writing meaningful Git commit messages:**
 
 ```sh
-$ git diff | shelldon "Generate a commit message" --copy
+$ git diff | shelldon ask "Generate a commit message" --copy
 "Refactor logging system to improve error handling and performance. This change updates the logging library and adjusts the log levels for better clarity."
 ```
 
