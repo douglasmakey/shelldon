@@ -2,6 +2,17 @@
 name = "shelldon"
 version = "0.1.0"
 edition = "2021"
+authors = ["Douglas Mendez <douglasmakey@gmail.com>"]
+description = "Shelldon is your new Rust-powered buddy with GPT features!"
+readme = "README.md"
+license = "MIT"
+repository = "https://github.com/douglasmakey/shelldon"
+keywords = ["shell", "gpt", "ai"]
+categories = ["development-tools", "text-processing", "command-line-utilities"]
+exclude = [
+    ".github",
+    "assets",
+]
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 

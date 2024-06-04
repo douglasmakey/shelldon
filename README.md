@@ -11,6 +11,15 @@ Yes, another CLI with GPT features. Shelldon is not intended to be a full GPT cl
 
 ## Installation
 
+Shelldon provides [Github releases](https://github.com/douglasmakey/shelldon/releases) with prebuilt binaries for MacOS and Linux.
+
+### Homebrew
+
+```sh
+brew tap douglasmakey/tap
+brew install shelldon
+```
+
 ### Building from Source
 
 If you prefer to build Shelldon from source, you can clone the repository and build it using cargo:
