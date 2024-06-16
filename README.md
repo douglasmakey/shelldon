@@ -2,7 +2,7 @@
 
 ![](./assets/shelldon.jpeg)
 
-Shelldon is a command-line tool written in Rust. It provides a set of utilities for executing shell commands, managing prompts, and interacting with OpenAI GPT.
+Shelldon is a command-line tool written in Rust. It provides utilities for executing shell commands, managing prompts, and interacting with multiple LLMs.
 
 Yes, another CLI with GPT features. Shelldon is not intended to be a full GPT client from the terminal; there are a couple of CLIs much better for that and also a lot of applications and even the OpenAI ChatGPT apps. Shelldon is to solve some personal use cases and it is very useful for me; I hope it could be useful for you too. Also, I made it to have fun playing with Rust!
 
@@ -32,10 +32,16 @@ cargo build --release
 
 ## Usage
 
-To use Shelldon, you’ll need to set your OpenAI token. You can do this by setting an environment variable. Here’s how you can set it in your terminal:
+Shelldon supports different AI providers such as Ollama, OpenAI, Gemini, Anthropic, and Cohere. You can control which provider to use with the `--model` flag. For example, `--model claude-3-haiku-20240307` or `--model gemini-1.5-flash-latest`. By default, Shelldon uses `gpt-4o` as the model.
+
+To use Shelldon, you need to set your API keys for the mentioned providers. You can do this by setting an environment variable. Here’s how to set it in your terminal:
 
 ```sh
-export OPENAI_API_KEY="your-openai-api-key"
+export OPENAI_API_KEY="api-key"
+export ANTHROPIC_API_KEY="api-key"
+export COHERE_API_KEY="api-key"
+export GEMINI_API_KEY="api-key"
+
 ```
 
 Shelldon allows you to integrate GPT features into your shell commands easily. Here are some examples to get you started:
@@ -43,7 +49,7 @@ Shelldon allows you to integrate GPT features into your shell commands easily. H
 ### Running Shell Commands
 
 ```sh
-$ shelldon exec "Show all the graphics ports for the Vagrant machine using Libvirt."
+$ shelldon exec "Show all the graphics ports for the Vagrant machine using Libvirt." --model gpt-4o
 Command to execute: vagrant ssh -c "virsh list --all | grep vagrant | awk '{print \$1}' | xargs -I {} virsh domdisplay {}"
 ? [R]un, [M]odify, [C]opy, [A]bort › 
 ```
@@ -188,7 +194,7 @@ So the ability to handle dynamic prompts with args and use them makes Shelldon a
 - [ ] Improve error handling.
 - [ ] Add default prompts.
 - [ ] Implement OpenAI functions?
-- [ ] Implement Ollama? Maybe in the future. Do you need it?
+- [X] Implement Ollama? Maybe in the future. Do you need it?
 
 ## Contributing
 

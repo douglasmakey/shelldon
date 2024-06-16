@@ -1,6 +1,6 @@
 use super::CommonArgs;
 use crate::{
-    backend::openai::OpenAI,
+    backend::genai::GenAI,
     command::{parse_prompt, read_input},
     config::Config,
     processor::CompletionProcessor,
@@ -18,7 +18,7 @@ pub struct AskArgs {
 }
 
 pub async fn handle_ask(config: Config, args: AskArgs) -> Result<()> {
-    let processor = CompletionProcessor::new(OpenAI::new()?);
+    let processor = CompletionProcessor::new(GenAI::new());
     let input = read_input(&args.common.input)?;
     let prompt = parse_prompt(config, args.common.prompt, args.common.set, "")?;
     let mut completion = processor

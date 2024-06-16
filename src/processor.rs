@@ -1,5 +1,5 @@
 use crate::Result;
-use futures::stream::BoxStream;
+use futures::stream::LocalBoxStream;
 
 pub trait CompletionGenerator {
     async fn generate_completion(
@@ -16,7 +16,7 @@ pub trait CompletionGenerator {
         temperature: f32,
         prompt: &str,
         input: &str,
-    ) -> Result<BoxStream<String>>;
+    ) -> Result<LocalBoxStream<String>>;
 }
 
 pub struct CompletionProcessor<T: CompletionGenerator> {
@@ -48,7 +48,7 @@ impl<T: CompletionGenerator> CompletionProcessor<T> {
         input: &str,
         model: &str,
         temperature: f32,
-    ) -> Result<BoxStream<String>> {
+    ) -> Result<LocalBoxStream<String>> {
         self.generator
             .stream_completion(model, temperature, prompt, input)
             .await

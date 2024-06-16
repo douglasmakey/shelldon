@@ -9,7 +9,7 @@ use async_openai::{
     Client,
 };
 use async_stream::stream;
-use futures::stream::BoxStream;
+use futures::stream::LocalBoxStream;
 
 pub struct OpenAI {
     client: Client<OpenAIConfig>,
@@ -70,7 +70,7 @@ impl CompletionGenerator for OpenAI {
         temperature: f32,
         prompt: &str,
         input: &str,
-    ) -> Result<BoxStream<String>> {
+    ) -> Result<LocalBoxStream<String>> {
         let messages = [
             ChatCompletionRequestSystemMessageArgs::default()
                 .content(prompt)
