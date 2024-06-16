@@ -1,6 +1,6 @@
 use super::{parse_prompt, read_input, CommonArgs};
 use crate::{
-    backend::openai::OpenAI,
+    backend::genai::GenAI,
     config::Config,
     processor::CompletionProcessor,
     system::{self, copy_to_clipboard, run_cmd},
@@ -36,7 +36,7 @@ pub struct ExecArgs {
 }
 
 pub async fn handle_exec(config: Config, args: ExecArgs) -> Result<()> {
-    let processor = CompletionProcessor::new(OpenAI::new()?);
+    let processor = CompletionProcessor::new(GenAI::new());
     let input = read_input(&args.common.input)?;
     let default_prompt = SHELL_PROMPT
         .replace("{shell}", &system::get_current_shell())

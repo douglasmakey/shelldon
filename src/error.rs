@@ -12,6 +12,8 @@ pub enum Error {
     CommandFailed { command: String },
     #[display(fmt = "API key not set")]
     APIKeyNotSet,
+    #[display(fmt = "Empty response")]
+    EmptyResponse,
 
     #[from]
     OpenAI(async_openai::error::OpenAIError),
@@ -23,4 +25,6 @@ pub enum Error {
     Serde(serde_json::Error),
     #[from]
     Dialoguer(dialoguer::Error),
+    #[from]
+    GenAI(genai::Error),
 }
