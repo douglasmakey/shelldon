@@ -194,7 +194,7 @@ So the ability to handle dynamic prompts with args and use them makes Shelldon a
 - [ ] Improve error handling.
 - [ ] Add default prompts.
 - [ ] Implement OpenAI functions?
-- [X] Implement Ollama? Maybe in the future. Do you need it?
+- [X] Implement Ollama? Maybe in the future. Do you need it? — No longer needed because of the integration with this amazing tool [rust-genai](https://github.com/jeremychone/rust-genai)
 
 ## Contributing
 
