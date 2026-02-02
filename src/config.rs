@@ -70,7 +70,7 @@ impl Config {
         let mut prompt_dir = self.prompts_dir.join(name);
         prompt_dir.set_extension("json");
         let prompt_json = fs::read_to_string(prompt_dir).ok()?;
-        serde_json::from_str(&prompt_json).unwrap()
+        serde_json::from_str(&prompt_json).ok()
     }
 
     pub fn load_prompts(&self) -> Result<Vec<Prompt>> {
@@ -78,9 +78,26 @@ impl Config {
 
         for entry in fs::read_dir(&self.prompts_dir)? {
             let entry = entry?;
-            let prompt_json = fs::read_to_string(entry.path())?;
-            let prompt: Prompt = serde_json::from_str(&prompt_json)?;
-            prompts.push(prompt);
+            let path = entry.path();
+
+            // Skip if not a JSON file
+            if path.extension().is_none_or(|ext| ext != "json"){
+                continue;
+            }
+
+            match fs::read_to_string(&path){
+                Ok(prompt_json) => {
+                    match serde_json::from_str(&prompt_json){
+                        Ok(prompt) => prompts.push(prompt),
+                        Err(e) => {
+                            eprintln!("Failed to parse prompt file {}: {}", path.display(), e);
+                        }
+                    }
+                },
+                Err(e) => {
+                    eprintln!("Failed to read prompt file {}: {}", path.display(), e);
+                }
+            }
         }
 
         Ok(prompts)
