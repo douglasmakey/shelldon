@@ -59,6 +59,8 @@ pub async fn handle_exec(config: Config, args: ExecArgs) -> Result<()> {
             dialoguer::console::style(&cmd).green()
         );
         run_cmd(&cmd)?;
+        // return early to avoid the interactive prompt
+        return Ok(());
     }
 
     prompt_action_for_cmd(&cmd)
