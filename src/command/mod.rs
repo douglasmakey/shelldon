@@ -11,13 +11,12 @@ use crate::{
     config::{Config, PromptValue},
     Result,
 };
-use atty::Stream;
 use clap::Parser;
 use regex::Regex;
 use std::result::Result as StdResult;
 use std::{
     collections::HashMap,
-    io::{self, Read},
+    io::{self, Read, IsTerminal},
 };
 
 #[derive(Debug, Clone, PartialEq, Eq, Hash)]
@@ -112,18 +111,19 @@ pub struct CommonArgs {
     prompt: Option<String>,
     #[arg(short, long, value_parser = parse_key_val, number_of_values = 1)]
     set: Vec<KeyValue>,
-    #[arg(required = true)]
-    input: String,
+    /// Input text (can also be provided via stdin pipe)
+    #[arg(required = false)]
+    input: Option<String>,
 }
 
-pub fn read_input(input: &str) -> Result<String> {
+pub fn read_input(input: Option<&str>) -> Result<String> {
     let mut buffer = String::new();
 
-    if !atty::is(Stream::Stdin) {
+    // Check if we have piped input (stdin is not a terminal)
+    if !io::stdin().is_terminal() {
         let mut stdin = io::stdin();
         let mut stdin_buffer = String::new();
 
-        // Read from stdin asynchronously
         stdin.read_to_string(&mut stdin_buffer)?;
 
         if !stdin_buffer.trim().is_empty() {
@@ -131,6 +131,18 @@ pub fn read_input(input: &str) -> Result<String> {
         }
     }
 
-    buffer.push_str(input);
+    // Append command-line input if provided
+    if let Some(input) = input {
+        if !buffer.is_empty() && !input.is_empty() {
+            buffer.push(' ');
+        }
+        buffer.push_str(input);
+    }
+
+    // Validate we have some input
+    if buffer.trim().is_empty() {
+        return Err(Error::InvalidInput("No input provided. Provide input as an argument or via stdin pipe.".to_string()));
+    }
+
     Ok(buffer)
 }

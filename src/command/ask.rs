@@ -19,7 +19,7 @@ pub struct AskArgs {
 
 pub async fn handle_ask(config: Config, args: AskArgs) -> Result<()> {
     let processor = CompletionProcessor::new(GenAI::new());
-    let input = read_input(&args.common.input)?;
+    let input = read_input(args.common.input.as_deref())?;
     let prompt = parse_prompt(config, args.common.prompt, args.common.set, "")?;
     let mut completion = processor
         .generate_stream(

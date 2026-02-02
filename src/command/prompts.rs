@@ -38,11 +38,10 @@ pub async fn handle_prompts(config: Config, args: PromptsArgs) -> Result<()> {
                 .interact()?;
 
             if config.load_prompt(name.as_str()).is_some() {
-                println!("{} Prompt already exists", style("✖").red());
-                Err(Error::PromptAlreadyExists { name: name.clone() })?;
+                return Err(Error::PromptAlreadyExists { name });
             }
 
-            if let Some(new_content) = Editor::new().edit("").unwrap() {
+            if let Some(new_content) = Editor::new().edit("")? {
                 config.save_prompt(&name, new_content.as_str())?;
                 println!("{} Prompt created", style("✔").green());
             }
@@ -55,7 +54,7 @@ pub async fn handle_prompts(config: Config, args: PromptsArgs) -> Result<()> {
                 })?,
             };
 
-            if let Some(new_content) = Editor::new().edit(&prompt.content).unwrap() {
+            if let Some(new_content) = Editor::new().edit(&prompt.content)? {
                 config.save_prompt(&prompt.name, new_content.as_str())?;
                 println!("{} Prompt modified", style("✔").green());
             }
@@ -84,7 +83,7 @@ pub async fn handle_prompts(config: Config, args: PromptsArgs) -> Result<()> {
         Command::Delete(args) => {
             let name = args.name;
             if config.load_prompt(&name).is_none() {
-                Err(Error::PromptNotFound { name: name.clone() })?;
+                return Err(Error::PromptNotFound { name });
             }
 
             config.delete_prompt(&name)?;

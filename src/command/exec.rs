@@ -37,9 +37,9 @@ pub struct ExecArgs {
 
 pub async fn handle_exec(config: Config, args: ExecArgs) -> Result<()> {
     let processor = CompletionProcessor::new(GenAI::new());
-    let input = read_input(&args.common.input)?;
+    let input = read_input(args.common.input.as_deref())?;
     let default_prompt = SHELL_PROMPT
-        .replace("{shell}", &system::get_current_shell())
+        .replace("{shell}", &system::get_shell_name())
         .replace("{os}", std::env::consts::OS);
 
     let prompt = parse_prompt(config, args.common.prompt, args.common.set, &default_prompt)?;
@@ -86,10 +86,17 @@ fn prompt_action_for_cmd(command: &str) -> Result<()> {
     match option.to_lowercase().as_str() {
         RUN => run_cmd(command),
         MODIFY => {
-            if let Some(rv) = Editor::new().edit(command).unwrap() {
-                prompt_action_for_cmd(&rv)?;
+            match Editor::new().edit(command){
+                Ok(Some(rv)) => prompt_action_for_cmd(&rv),
+                Ok(None) => {
+                    println!("{} Aborted", style("✖").red());
+                    Ok(())
+                },
+                Err(e) => {
+                    eprintln!("{} Failed to open editor: {}", style("✖").red(), e);
+                    Ok(())
+                },
             }
-            Ok(())
         }
         COPY => {
             copy_to_clipboard(command)?;

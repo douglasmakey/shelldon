@@ -14,6 +14,14 @@ pub enum Error {
     APIKeyNotSet,
     #[display(fmt = "Empty response")]
     EmptyResponse,
+    #[display(fmt = "{}", _0)]
+    InvalidInput(String),
+    #[display(fmt = "Could not find configuration directory")]
+    ConfigDirNotFound,
+    #[display(fmt = "Failed to create directory: {}", path)]
+    CreateDirFailed { path: String },
+    #[display(fmt = "Clipboard stdin unavailable")]
+    ClipboardStdinUnavailable,
 
     #[from]
     OpenAI(async_openai::error::OpenAIError),

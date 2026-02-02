@@ -30,18 +30,20 @@ enum Commands {
 
 #[tokio::main]
 async fn main() {
-    let config = Config::new();
-    config.initialize();
+    if let Err(e) = run().await {
+        eprintln!("{} {}", style("✖").red(), e);
+        std::process::exit(1);
+    }
+}
+
+async fn run() -> Result<()> {
+    let config = Config::new()?;
+    config.initialize()?;
 
     let app = App::parse();
-    let result = match app.command {
+    match app.command {
         Commands::Exec(args) => handle_exec(config, args).await,
         Commands::Prompts(args) => handle_prompts(config, args).await,
         Commands::Ask(args) => handle_ask(config, args).await,
-    };
-
-    if let Err(e) = result {
-        eprintln!("{} {}", style("✖").red(), e);
-        std::process::exit(1);
     }
 }

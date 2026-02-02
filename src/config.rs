@@ -1,4 +1,4 @@
-use crate::Result;
+use crate::{Error, Result};
 use regex::Regex;
 use serde::{Deserialize, Serialize};
 use std::{
@@ -27,27 +27,31 @@ pub struct Config {
 }
 
 impl Config {
-    pub fn new() -> Self {
+    pub fn new() -> Result<Self> {
         let config_dir = dirs::config_dir()
-            .expect("Could not find configuration directory")
+            .ok_or(Error::ConfigDirNotFound)?
             .join(SHELLDON);
 
         let prompts_dir = config_dir.join("prompts");
-        Self {
+        Ok(Self {
             config_dir,
             prompts_dir,
-        }
+        })
     }
 
-    pub fn initialize(&self) {
-        self.ensure_dir_exists(&self.config_dir);
-        self.ensure_dir_exists(&self.prompts_dir);
+    pub fn initialize(&self) -> Result<()> {
+        self.ensure_dir_exists(&self.config_dir)?;
+        self.ensure_dir_exists(&self.prompts_dir)?;
+        Ok(())
     }
 
-    fn ensure_dir_exists(&self, path: &Path) {
+    fn ensure_dir_exists(&self, path: &Path) -> Result<()> {
         if !path.exists() {
-            fs::create_dir_all(path).expect("Failed to create directory");
+            fs::create_dir_all(path).map_err(|_| Error::CreateDirFailed {
+                path: path.display().to_string(),
+            })?;
         }
+        Ok(())
     }
 
     pub fn save_prompt(&self, name: &str, content: &str) -> Result<()> {
@@ -81,17 +85,15 @@ impl Config {
             let path = entry.path();
 
             // Skip if not a JSON file
-            if path.extension().is_none_or(|ext| ext != "json"){
+            if path.extension().is_none_or(|ext| ext != "json") {
                 continue;
             }
 
-            match fs::read_to_string(&path){
-                Ok(prompt_json) => {
-                    match serde_json::from_str(&prompt_json){
-                        Ok(prompt) => prompts.push(prompt),
-                        Err(e) => {
-                            eprintln!("Failed to parse prompt file {}: {}", path.display(), e);
-                        }
+            match fs::read_to_string(&path) {
+                Ok(prompt_json) => match serde_json::from_str(&prompt_json) {
+                    Ok(prompt) => prompts.push(prompt),
+                    Err(e) => {
+                        eprintln!("Failed to parse prompt file {}: {}", path.display(), e);
                     }
                 },
                 Err(e) => {
