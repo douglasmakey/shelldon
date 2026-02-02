@@ -31,7 +31,7 @@ impl CompletionGenerator for OpenAI {
     async fn generate_completion(
         &self,
         model: &str,
-        temperature: f32,
+        temperature: f64,
         prompt: &str,
         input: &str,
     ) -> Result<String> {
@@ -48,7 +48,7 @@ impl CompletionGenerator for OpenAI {
 
         let request = CreateChatCompletionRequestArgs::default()
             .model(model)
-            .temperature(temperature)
+            .temperature(temperature as f32)
             .messages(messages)
             .build()?;
 
@@ -67,10 +67,10 @@ impl CompletionGenerator for OpenAI {
     async fn stream_completion(
         &self,
         model: &str,
-        temperature: f32,
+        temperature: f64,
         prompt: &str,
         input: &str,
-    ) -> Result<LocalBoxStream<String>> {
+    ) -> Result<LocalBoxStream<'_, String>> {
         let messages = [
             ChatCompletionRequestSystemMessageArgs::default()
                 .content(prompt)
@@ -84,7 +84,7 @@ impl CompletionGenerator for OpenAI {
 
         let request = CreateChatCompletionRequestArgs::default()
             .model(model)
-            .temperature(temperature)
+            .temperature(temperature as f32)
             .messages(messages)
             .stream(true)
             .build()?;

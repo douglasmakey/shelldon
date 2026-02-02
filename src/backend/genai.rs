@@ -2,9 +2,10 @@ use crate::processor::CompletionGenerator;
 use crate::{Error, Result};
 use async_stream::stream;
 use futures::{stream::LocalBoxStream, StreamExt};
+use genai::chat::ChatOptions;
 use genai::{
     chat::{ChatMessage, ChatRequest, ChatStreamEvent, StreamChunk},
-    client::Client,
+    Client
 };
 
 pub struct GenAI {
@@ -23,26 +24,28 @@ impl CompletionGenerator for GenAI {
     async fn generate_completion(
         &self,
         model: &str,
-        _temperature: f32,
+        temperature: f64,
         prompt: &str,
         input: &str,
     ) -> crate::Result<String> {
         let req = ChatRequest::new(vec![ChatMessage::system(prompt), ChatMessage::user(input)]);
-        let resp = self.client.exec_chat(model, req.clone(), None).await?;
-        resp.content.ok_or(Error::EmptyResponse)
+        let options = ChatOptions::default().with_temperature(temperature);
+        let resp = self.client.exec_chat(model, req.clone(), Some(&options)).await?;
+        resp.content.joined_texts().ok_or(Error::EmptyResponse)
     }
 
     async fn stream_completion(
         &self,
         model: &str,
-        _temperature: f32,
+        temperature: f64,
         prompt: &str,
         input: &str,
-    ) -> Result<LocalBoxStream<String>> {
+    ) -> Result<LocalBoxStream<'_, String>> {
         let req = ChatRequest::new(vec![ChatMessage::system(prompt), ChatMessage::user(input)]);
+        let options = ChatOptions::default().with_temperature(temperature);
         let resp = self
             .client
-            .exec_chat_stream(model, req.clone(), None)
+            .exec_chat_stream(model, req.clone(), Some(&options))
             .await?;
 
         let async_stream = stream! {

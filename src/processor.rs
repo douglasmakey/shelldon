@@ -5,7 +5,7 @@ pub trait CompletionGenerator {
     async fn generate_completion(
         &self,
         model: &str,
-        temperature: f32,
+        temperature: f64,
         prompt: &str,
         input: &str,
     ) -> Result<String>;
@@ -13,10 +13,10 @@ pub trait CompletionGenerator {
     async fn stream_completion(
         &self,
         model: &str,
-        temperature: f32,
+        temperature: f64,
         prompt: &str,
         input: &str,
-    ) -> Result<LocalBoxStream<String>>;
+    ) -> Result<LocalBoxStream<'_, String>>;
 }
 
 pub struct CompletionProcessor<T: CompletionGenerator> {
@@ -35,7 +35,7 @@ impl<T: CompletionGenerator> CompletionProcessor<T> {
         prompt: &str,
         input: &str,
         model: &str,
-        temperature: f32,
+        temperature: f64,
     ) -> Result<String> {
         self.generator
             .generate_completion(model, temperature, prompt, input)
@@ -47,8 +47,8 @@ impl<T: CompletionGenerator> CompletionProcessor<T> {
         prompt: &str,
         input: &str,
         model: &str,
-        temperature: f32,
-    ) -> Result<LocalBoxStream<String>> {
+        temperature: f64,
+    ) -> Result<LocalBoxStream<'_, String>> {
         self.generator
             .stream_completion(model, temperature, prompt, input)
             .await

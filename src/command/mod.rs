@@ -100,7 +100,7 @@ pub struct CommonArgs {
         help = "Temperature value to set the randomness of the output",
         default_value = "0.0"
     )]
-    temperature: f32,
+    temperature: f64,
     #[clap(
         short,
         long,
