@@ -1,4 +1,5 @@
-use super::{parse_prompt, read_input, CommonArgs};
+use super::context::ExecContext;
+use crate::command::{parse_prompt, read_input, CommonArgs};
 use crate::{
     backend::genai::GenAI,
     config::Config,
@@ -8,14 +9,6 @@ use crate::{
 };
 use clap::Parser;
 use dialoguer::{console::style, theme::ColorfulTheme, Editor, Input};
-
-/// Context for command execution that maintains conversation history.
-struct ExecContext {
-    processor: CompletionProcessor<GenAI>,
-    model: String,
-    temperature: f64,
-    messages: Vec<Message>,
-}
 
 const RUN: &str = "r";
 const COPY: &str = "c";
@@ -53,12 +46,15 @@ pub async fn handle_exec(config: Config, args: ExecArgs) -> Result<()> {
 
     let prompt = parse_prompt(config, args.common.prompt, args.common.set, &default_prompt)?;
 
-    // Initialize conversation history with system prompt and user input
-    let messages = vec![Message::System(prompt), Message::User(input)];
+    // Create execution context with conversation history
+    let mut ctx = ExecContext::new(
+        processor,
+        args.common.model,
+        args.common.temperature,
+        vec![Message::System(prompt)],
+    );
 
-    let cmd = processor
-        .chat(&messages, &args.common.model, args.common.temperature)
-        .await?;
+    let cmd = ctx.chat(input).await?;
 
     if args.run {
         println!(
@@ -69,24 +65,17 @@ pub async fn handle_exec(config: Config, args: ExecArgs) -> Result<()> {
         return Ok(());
     }
 
-    // Create execution context with conversation history
-    let mut ctx = ExecContext {
-        processor,
-        model: args.common.model,
-        temperature: args.common.temperature,
-        messages,
-    };
-
-    // Add the assistant's response to history
-    ctx.messages.push(Message::Assistant(cmd.clone()));
-
-    prompt_action_for_cmd(&mut ctx, &cmd).await
+    prompt_action_for_cmd(&mut ctx).await
 }
 
-async fn prompt_action_for_cmd(ctx: &mut ExecContext, command: &str) -> Result<()> {
+async fn prompt_action_for_cmd(ctx: &mut ExecContext) -> Result<()> {
+    let Some(command) = ctx.get_last_assistant_message() else {
+        return Err(crate::Error::EmptyResponse);
+    };
+
     println!(
         "Command to execute: {}",
-        dialoguer::console::style(command).green()
+        dialoguer::console::style(&command).green()
     );
 
     let option = Input::with_theme(&ColorfulTheme::default())
@@ -101,14 +90,12 @@ async fn prompt_action_for_cmd(ctx: &mut ExecContext, command: &str) -> Result<(
         .interact_text()?;
 
     match option.to_lowercase().as_str() {
-        RUN => run_cmd(command),
-        MODIFY => match Editor::new().edit(command) {
+        RUN => run_cmd(&command),
+        MODIFY => match Editor::new().edit(&command) {
             Ok(Some(rv)) => {
                 // Update the last assistant message with the modified command
-                if let Some(Message::Assistant(msg)) = ctx.messages.last_mut() {
-                    *msg = rv.clone();
-                }
-                Box::pin(prompt_action_for_cmd(ctx, &rv)).await
+                ctx.update_last_assistant_message(rv.clone());
+                Box::pin(prompt_action_for_cmd(ctx)).await
             }
             Ok(None) => {
                 println!("{} Aborted", style("✖").red());
@@ -124,22 +111,12 @@ async fn prompt_action_for_cmd(ctx: &mut ExecContext, command: &str) -> Result<(
                 .with_prompt("How should I modify the command?")
                 .interact_text()?;
 
-            // Add user feedback to conversation history
-            ctx.messages.push(Message::User(feedback));
-
             // Generate new command based on conversation history
-            let new_cmd = ctx
-                .processor
-                .chat(&ctx.messages, &ctx.model, ctx.temperature)
-                .await?;
-
-            // Add the new response to history
-            ctx.messages.push(Message::Assistant(new_cmd.clone()));
-
-            Box::pin(prompt_action_for_cmd(ctx, &new_cmd)).await
+            ctx.chat(feedback).await?;
+            Box::pin(prompt_action_for_cmd(ctx)).await
         }
         COPY => {
-            copy_to_clipboard(command)?;
+            copy_to_clipboard(&command)?;
             println!("{} Copied to clipboard", style("✔").green());
             Ok(())
         }
