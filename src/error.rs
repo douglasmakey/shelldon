@@ -4,27 +4,25 @@ pub type Result<T> = std::result::Result<T, Error>;
 
 #[derive(Debug, Display, From)]
 pub enum Error {
-    #[display(fmt = "Prompt '{}' already exists", name)]
+    #[display("Prompt '{}' already exists", name)]
     PromptAlreadyExists { name: String },
-    #[display(fmt = "Prompt '{}' not found", name)]
+    #[display("Prompt '{}' not found", name)]
     PromptNotFound { name: String },
-    #[display(fmt = "Command '{}' failed", command)]
+    #[display("Command '{}' failed", command)]
     CommandFailed { command: String },
-    #[display(fmt = "API key not set")]
+    #[display("API key not set")]
     APIKeyNotSet,
-    #[display(fmt = "Empty response")]
+    #[display("Empty response")]
     EmptyResponse,
-    #[display(fmt = "{}", _0)]
+    #[display("{}", _0)]
     InvalidInput(String),
-    #[display(fmt = "Could not find configuration directory")]
+    #[display("Could not find configuration directory")]
     ConfigDirNotFound,
-    #[display(fmt = "Failed to create directory: {}", path)]
+    #[display("Failed to create directory: {}", path)]
     CreateDirFailed { path: String },
-    #[display(fmt = "Clipboard stdin unavailable")]
+    #[display("Clipboard stdin unavailable")]
     ClipboardStdinUnavailable,
 
-    #[from]
-    OpenAI(async_openai::error::OpenAIError),
     #[from]
     Io(std::io::Error),
     #[from]

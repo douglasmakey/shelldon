@@ -16,7 +16,7 @@ use regex::Regex;
 use std::result::Result as StdResult;
 use std::{
     collections::HashMap,
-    io::{self, Read, IsTerminal},
+    io::{self, IsTerminal, Read},
 };
 
 #[derive(Debug, Clone, PartialEq, Eq, Hash)]
@@ -141,7 +141,9 @@ pub fn read_input(input: Option<&str>) -> Result<String> {
 
     // Validate we have some input
     if buffer.trim().is_empty() {
-        return Err(Error::InvalidInput("No input provided. Provide input as an argument or via stdin pipe.".to_string()));
+        return Err(Error::InvalidInput(
+            "No input provided. Provide input as an argument or via stdin pipe.".to_string(),
+        ));
     }
 
     Ok(buffer)

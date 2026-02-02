@@ -5,7 +5,7 @@ use futures::{stream::LocalBoxStream, StreamExt};
 use genai::chat::ChatOptions;
 use genai::{
     chat::{ChatMessage, ChatRequest, ChatStreamEvent, StreamChunk},
-    Client
+    Client,
 };
 
 pub struct GenAI {
@@ -30,7 +30,10 @@ impl CompletionGenerator for GenAI {
     ) -> crate::Result<String> {
         let req = ChatRequest::new(vec![ChatMessage::system(prompt), ChatMessage::user(input)]);
         let options = ChatOptions::default().with_temperature(temperature);
-        let resp = self.client.exec_chat(model, req.clone(), Some(&options)).await?;
+        let resp = self
+            .client
+            .exec_chat(model, req.clone(), Some(&options))
+            .await?;
         resp.content.joined_texts().ok_or(Error::EmptyResponse)
     }
 

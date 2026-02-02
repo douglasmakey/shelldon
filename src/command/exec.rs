@@ -85,19 +85,17 @@ fn prompt_action_for_cmd(command: &str) -> Result<()> {
 
     match option.to_lowercase().as_str() {
         RUN => run_cmd(command),
-        MODIFY => {
-            match Editor::new().edit(command){
-                Ok(Some(rv)) => prompt_action_for_cmd(&rv),
-                Ok(None) => {
-                    println!("{} Aborted", style("✖").red());
-                    Ok(())
-                },
-                Err(e) => {
-                    eprintln!("{} Failed to open editor: {}", style("✖").red(), e);
-                    Ok(())
-                },
+        MODIFY => match Editor::new().edit(command) {
+            Ok(Some(rv)) => prompt_action_for_cmd(&rv),
+            Ok(None) => {
+                println!("{} Aborted", style("✖").red());
+                Ok(())
             }
-        }
+            Err(e) => {
+                eprintln!("{} Failed to open editor: {}", style("✖").red(), e);
+                Ok(())
+            }
+        },
         COPY => {
             copy_to_clipboard(command)?;
             println!("{} Copied to clipboard", style("✔").green());
