@@ -51,8 +51,26 @@ Shelldon allows you to integrate GPT features into your shell commands easily. H
 ```sh
 $ shelldon exec "Show all the graphics ports for the Vagrant machine using Libvirt." --model gpt-4o
 Command to execute: vagrant ssh -c "virsh list --all | grep vagrant | awk '{print \$1}' | xargs -I {} virsh domdisplay {}"
-? [R]un, [M]odify, [C]opy, [A]bort › 
+? [R]un, [M]odify, [I]terate, [C]opy, [A]bort ›
 ```
+
+**Interactive Command Refinement with Iterate**
+
+The `[I]terate` option allows you to have a conversation with the LLM to refine the generated command. Instead of manually editing the command, you can describe what changes you want and let the AI modify it for you:
+
+```sh
+$ shelldon exec "list all files"
+Command to execute: ls -la
+? [R]un, [M]odify, [I]terate, [C]opy, [A]bort › i
+? How should I modify the command? › only show hidden files
+Command to execute: ls -la | grep '^\.'
+? [R]un, [M]odify, [I]terate, [C]opy, [A]bort › i
+? How should I modify the command? › sort by size
+Command to execute: ls -la | grep '^\.' | sort -k5 -n
+? [R]un, [M]odify, [I]terate, [C]opy, [A]bort › r
+```
+
+The iterate feature maintains the full conversation context, so the LLM understands your original request and all subsequent modifications. This makes it easy to incrementally build complex commands through natural language.
 
 **Analyzing Docker Logs**
 
@@ -99,7 +117,7 @@ server {
 ```sh
 $ shelldon exec "Find and delete all log files older than 30 days in /var/log"
 Command to execute: find /var/log -name "*.log" -type f -mtime +30 -exec rm {} \;
-? [R]un, [M]odify, [C]opy, [A]bort › 
+? [R]un, [M]odify, [I]terate, [C]opy, [A]bort ›
 ```
 
 **Get help with writing meaningful Git commit messages:**
